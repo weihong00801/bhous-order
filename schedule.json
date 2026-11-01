@@ -1,0 +1,42 @@
+{
+  "openDates": [
+    "2026-11-01",
+    "2026-11-03",
+    "2026-11-06"
+  ],
+  "locations": {
+    "0": [
+      "Adda Heights",
+      "Tasek Central"
+    ],
+    "1": [
+      "Adda Heights"
+    ],
+    "2": [
+      "Adda Heights"
+    ],
+    "3": [
+      "Horizon Hills",
+      "Adda Heights"
+    ],
+    "4": [
+      "Horizon Hills",
+      "Tasek Central"
+    ],
+    "5": [
+      "Horizon Hills",
+      "Tasek Central"
+    ],
+    "6": [
+      "Horizon Hills",
+      "Kulai"
+    ]
+  },
+  "notice": "",
+  "notice_zh": "",
+  "pickupNote": "We confirm the exact pickup time with you on WhatsApp after you send your order.",
+  "pickupNote_zh": "发送订单后，我们会在 WhatsApp 和你确认具体取货时间。",
+  "deliveryOn": true,
+  "pwpOn": true,
+  "pwpEnd": "2026-11-15"
+}
