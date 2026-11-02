@@ -38,5 +38,24 @@
   "pickupNote_zh": "发送订单后，我们会在 WhatsApp 和你确认具体取货时间。",
   "deliveryOn": true,
   "pwpOn": true,
-  "pwpEnd": "2026-11-15"
+  "pwpEnd": "2026-11-15",
+  "story": {
+    "title": "Our story",
+    "title_zh": "我们的故事",
+    "body": [
+      "It started in a cafe in Kyoto, with one bagel.",
+      "I had always thought a bagel was simply hard. That one bite changed my mind: soft, chewy, and so good.",
+      "In Johor Bahru, BHous began in a home kitchen. One person, two hands, baking that surprise again.",
+      "We bake only what you order, so every bagel reaches you fresh. We open on set days and close the day before.",
+      "We are new, and still learning. Thank you for being one of the first to try us."
+    ],
+    "body_zh": [
+      "故事从京都一家 cafe 里的一个贝果开始。",
+      "我一直以为贝果就是硬硬的。那一口，把我的想法改了：柔软、有嚼劲，而且真的很好吃。",
+      "在新山，BHous 从一间家庭厨房开始。一个人，一双手，想把那份惊喜再烤出来。",
+      "我们只做你订的份量，所以每一个贝果都是新鲜的。我们只在固定的日子开放，前一天中午截止。",
+      "我们是新店，还在学习。谢谢你成为最早尝试我们的人。"
+    ],
+    "sign": "BHous Bakery"
+  }
 }
