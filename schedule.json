@@ -385,5 +385,281 @@
    "tasek": "1pm",
    "adda": "2pm"
   }
- }
+ },
+ "botThemes": [
+  {
+   "id": "plain",
+   "name": "Original 原味",
+   "match": [
+    "^Plain",
+    "Original"
+   ],
+   "main": "#F3E3C8",
+   "sub": "#FFF6E6",
+   "accent": "#7A4B2E",
+   "led": "#FFB45C",
+   "deco": {
+    "t": "seeds",
+    "c": "#FFF9EA",
+    "c2": "#EBD9B8"
+   },
+   "fx": [
+    "✨"
+   ]
+  },
+  {
+   "id": "butter",
+   "name": "Butter & Sugar",
+   "match": [
+    "Butter"
+   ],
+   "main": "#F6E2A0",
+   "sub": "#FFF4CC",
+   "accent": "#B98A2E",
+   "led": "#FFC85C",
+   "deco": {
+    "t": "sugar",
+    "c": "#FFFFFF",
+    "c2": "#FFE27A"
+   },
+   "fx": [
+    "✨",
+    "🧈"
+   ]
+  },
+  {
+   "id": "yuzu",
+   "name": "Yuzu 柚子",
+   "match": [
+    "Yuzu"
+   ],
+   "main": "#F2D557",
+   "sub": "#FFF1A8",
+   "accent": "#C99A18",
+   "led": "#FFF3B0",
+   "deco": {
+    "t": "slice",
+    "c": "#F6D84A",
+    "c2": "#FFEC85"
+   },
+   "fx": [
+    "🍋",
+    "✨"
+   ]
+  },
+  {
+   "id": "matcha",
+   "name": "Matcha 抹茶",
+   "match": [
+    "Matcha"
+   ],
+   "main": "#A9C77E",
+   "sub": "#DDE9BE",
+   "accent": "#4F7A3A",
+   "led": "#E4FFA8",
+   "deco": {
+    "t": "leaf",
+    "c": "#4E8A3A",
+    "c2": "#8FBF6A"
+   },
+   "fx": [
+    "🍃",
+    "✨"
+   ]
+  },
+  {
+   "id": "blueberry",
+   "name": "Blueberry 蓝莓",
+   "match": [
+    "Blueberry"
+   ],
+   "main": "#CBB0EA",
+   "sub": "#F0E6FA",
+   "accent": "#7A55A8",
+   "led": "#FFE08A",
+   "deco": {
+    "t": "berries",
+    "c": "#7A5FC0"
+   },
+   "fx": [
+    "🫐",
+    "✨"
+   ]
+  },
+  {
+   "id": "choco",
+   "name": "Chocolate 巧克力",
+   "match": [
+    "Choco"
+   ],
+   "main": "#7A4A32",
+   "sub": "#B07F62",
+   "accent": "#3E2316",
+   "led": "#FFC27A",
+   "deco": {
+    "t": "chips",
+    "c": "#3A2112",
+    "c2": "#8A5A3C"
+   },
+   "fx": [
+    "🍫",
+    "✨"
+   ]
+  },
+  {
+   "id": "cheese",
+   "name": "Cheese 芝士",
+   "match": [
+    "Cheese"
+   ],
+   "main": "#F2CE72",
+   "sub": "#FFF0B8",
+   "accent": "#B8862E",
+   "led": "#FFE9A0",
+   "deco": {
+    "t": "cheese",
+    "c": "#FFE08A",
+    "c2": "#E2A93A"
+   },
+   "fx": [
+    "🧀",
+    "✨"
+   ]
+  },
+  {
+   "id": "everything",
+   "name": "Everything 综合香料",
+   "match": [
+    "Everything"
+   ],
+   "main": "#C9A46A",
+   "sub": "#EAD9B3",
+   "accent": "#5B4A32",
+   "led": "#FFD9A0",
+   "deco": {
+    "t": "seeds",
+    "c": "#2B2118",
+    "c2": "#FFF6DD"
+   },
+   "fx": [
+    "✨"
+   ]
+  },
+  {
+   "id": "tomato",
+   "name": "Tomato 番茄",
+   "match": [
+    "Tomato"
+   ],
+   "main": "#E8663F",
+   "sub": "#F6A878",
+   "accent": "#9E2E1A",
+   "led": "#FFE6B0",
+   "deco": {
+    "t": "tomato",
+    "c": "#E23B24",
+    "c2": "#4E8A3A"
+   },
+   "fx": [
+    "🍅",
+    "✨"
+   ]
+  },
+  {
+   "id": "floss",
+   "name": "Pork Floss 肉松",
+   "match": [
+    "Floss",
+    "肉松"
+   ],
+   "main": "#E8B04C",
+   "sub": "#F8DC96",
+   "accent": "#A9702A",
+   "led": "#FFF0B0",
+   "deco": {
+    "t": "floss",
+    "c": "#F2C45E",
+    "c2": "#D99A2C"
+   },
+   "fx": [
+    "✨"
+   ]
+  },
+  {
+   "id": "sesame",
+   "name": "Sesame 芝麻",
+   "match": [
+    "Sesame"
+   ],
+   "main": "#9C8A78",
+   "sub": "#CDBFAF",
+   "accent": "#5A4A3C",
+   "led": "#FFD9A0",
+   "deco": {
+    "t": "seeds",
+    "c": "#2B2118",
+    "c2": "#F4EBDD"
+   },
+   "fx": [
+    "✨"
+   ]
+  },
+  {
+   "id": "strawberry",
+   "name": "Strawberry 草莓",
+   "match": [
+    "Strawberry"
+   ],
+   "main": "#F2A0B6",
+   "sub": "#FFD6E0",
+   "accent": "#C94C73",
+   "led": "#FFF0B0",
+   "deco": {
+    "t": "strawberry",
+    "c": "#E8456B",
+    "c2": "#4E8A3A"
+   },
+   "fx": [
+    "🍓",
+    "💗"
+   ]
+  }
+ ],
+ "bagelTips": [
+  {
+   "k": "freeze",
+   "q": "Not eating today?",
+   "qz": "今天吃不完",
+   "a": "Not eating today? Pop me in the freezer as soon as you get home! I stay yummy for about 1 month.",
+   "az": "今天不吃？拿到就马上放冷冻！大约可以保存 1 个月。"
+  },
+  {
+   "k": "oven",
+   "q": "Oven / air fryer",
+   "qz": "烤箱 / 气炸锅",
+   "a": "Oven or air fryer: 180°C for 4 to 6 minutes. Spray a tiny bit of water first, so I come out crispy outside and soft inside!",
+   "az": "烤箱或气炸锅：180°C，4–6 分钟。先喷一点点水，外脆内软！"
+  },
+  {
+   "k": "micro",
+   "q": "Microwave",
+   "qz": "微波炉",
+   "a": "Microwave: 20 to 30 seconds, with a little spray of water. Quick and easy!",
+   "az": "微波炉：20–30 秒，也喷一点水。快又方便！"
+  },
+  {
+   "k": "steam",
+   "q": "Steamer",
+   "qz": "蒸",
+   "a": "Steamer: 5 to 8 minutes. Super soft and fluffy!",
+   "az": "用蒸的：5–8 分钟，超级松软！"
+  },
+  {
+   "k": "filled",
+   "q": "Filled bagels",
+   "qz": "有内馅的",
+   "a": "Filled bagels: thaw for 20 to 30 minutes, or leave in the fridge overnight, then heat as above.",
+   "az": "有内馅的：先解冻 20–30 分钟，或放冰箱过夜，再按上面的方法加热。"
+  }
+ ]
 }

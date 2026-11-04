@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-Hans"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>BHous 后台</title>
+<style>
+:root{--bg:#1c1b1a;--card:#2a2826;--line:#3d3a37;--ink:#f1e9dc;--ink2:#b9ad9b;--acc:#e8b56b;--ok:#7fb069;--bad:#d9776b;--warn:#e0a36b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Noto Sans SC",sans-serif;padding:14px 14px 80px;max-width:720px;margin:auto}
+h1{font-size:20px;margin:6px 0 12px}h2{font-size:15px;margin:18px 0 8px;color:var(--acc)}
+button,input,select{font:inherit}button{cursor:pointer}
+.btn{background:var(--acc);color:#2a1a08;border:0;border-radius:999px;padding:9px 16px;font-weight:700}.btn.g{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.s{padding:6px 12px;font-size:13px}.btn.ok{background:var(--ok);color:#10200a}.btn.bad{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+input[type=text],input[type=password],input[type=search]{width:100%;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:11px 12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sp{flex:1}
+.tabs{display:flex;gap:6px;margin:8px 0 12px;overflow-x:auto}.tab{border:1px solid var(--line);background:transparent;color:var(--ink2);border-radius:999px;padding:7px 14px;white-space:nowrap}.tab.on{background:var(--acc);color:#2a1a08;border-color:var(--acc)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chip{border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:999px;padding:5px 11px;font-size:13px}.chip.on{border-color:var(--acc);color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.nm{font-weight:700;font-size:16px}.tot{font-weight:700;color:var(--acc);white-space:nowrap}
+.meta{color:var(--ink2);font-size:13px;margin-top:2px}.items{white-space:pre-wrap;font-size:13.5px;margin:8px 0;padding:8px 10px;background:rgba(0,0,0,.2);border-radius:10px}
+.st{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;margin-right:6px}.st.PENDING{background:#4a3f2a;color:var(--warn)}.st.CLAIMED{background:#4a3a1f;color:var(--acc)}.st.PAID{background:#27402a;color:var(--ok)}.st.CANCELLED{background:#4a2a27;color:var(--bad)}.st.COL{background:#2a3a48;color:#8fb8d9}
+.amt{font-size:13px;color:var(--ink2)}.amt b{color:var(--ink)}
+a{color:var(--acc)}.note{color:var(--warn);font-size:13px}
+.msg{padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--ink2);font-weight:500}
+.hide{display:none}
+</style></head><body>
+<div id="login" class="hide"><h1>BHous 后台</h1><p class="meta">输入你的后台密码（ADMIN_KEY）。密码只存在这部手机/电脑的浏览器里。</p>
+<input id="k" type="password" placeholder="后台密码" autocomplete="current-password"><div style="height:8px"></div>
+<input id="u" type="text" placeholder="后台网址（Apps Script Web app URL）" class="hide"><div style="height:8px"></div><button class="btn" id="go">进入</button><p class="note" id="lerr"></p></div>
+
+<div id="app" class="hide">
+<div class="row"><h1 class="sp">BHous 后台</h1><button class="btn g s" id="refresh">刷新</button><button class="btn g s" id="out">退出</button></div>
+<div class="tabs"><button class="tab on" data-t="orders">订单</button><button class="tab" data-t="prep">备货</button><button class="tab" data-t="vouch">Voucher</button><button class="tab" data-t="more">备份</button></div>
+
+<div id="t-orders"><input id="q" type="search" placeholder="搜索 名字 / 电话 / 订单号">
+<div class="chips" id="chips"></div><div id="list"></div></div>
+<div id="t-prep" class="hide"></div>
+<div id="t-vouch" class="hide"></div>
+<div id="t-more" class="hide"><div class="card"><b>数据保存在你自己的 Google Sheet</b><p class="meta">这个页面只是一个窗口。订单、voucher 都在你的 Google Sheet 里，每天凌晨 3 点会自动在你的 Google Drive「BHous Backups」文件夹存一份备份（保留最近 30 份）。就算这个页面或系统出问题，Sheet 里的资料也不会不见。</p><button class="btn" id="bk">现在立刻备份一次</button><p id="bkmsg" class="meta"></p></div></div>
+</div>
+<script>
+var KEY=localStorage.getItem("bh_adm_k")||"",API=localStorage.getItem("bh_adm_u")||"",DATA=[],F="open",TAB="orders";
+function $(i){return document.getElementById(i)}
+function call(b){b.action="admin";b.key=KEY;return fetch(API,{method:"POST",body:JSON.stringify(b)}).then(function(r){return r.json()})}
+function show(id){["login","app"].forEach(function(x){$(x).classList.toggle("hide",x!==id)})}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function start(){
+  if(!API){fetch("schedule.json?"+Date.now()).then(function(r){return r.json()}).then(function(s){if(s.api){API=s.api;localStorage.setItem("bh_adm_u",API)}else $("u").classList.remove("hide");begin()}).catch(function(){$("u").classList.remove("hide");begin()})}else begin()}
+function begin(){ if(KEY&&API){load(true)} else show("login") }
+$("go").onclick=function(){KEY=$("k").value.trim();if(!$("u").classList.contains("hide")&&$("u").value.trim()){API=$("u").value.trim();localStorage.setItem("bh_adm_u",API)}$("lerr").textContent="";load(true)};
+$("out").onclick=function(){localStorage.removeItem("bh_adm_k");KEY="";show("login")};
+$("refresh").onclick=function(){load()};
+function load(first){
+  call({op:"orders"}).then(function(j){
+    if(!j||!j.ok){if(first){$("lerr").textContent=j&&j.err==="forbidden"?"密码不对（连续错 8 次会锁 15 分钟）":"连不上后台";show("login")}else alert("读取失败");return}
+    localStorage.setItem("bh_adm_k",KEY);DATA=j.orders;window.TODAY=j.today;show("app");render()
+  }).catch(function(){if(first){$("lerr").textContent="连不上后台，请检查网址";show("login")}})
+}
+document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){TAB=b.dataset.t;document.querySelectorAll(".tab").forEach(function(x){x.classList.toggle("on",x===b)});["orders","prep","vouch","more"].forEach(function(t){$("t-"+t).classList.toggle("hide",t!==TAB)});render()}});
+var FILTERS=[["open","待处理"],["claimed","已按「我已付款」"],["pending","未付款"],["paid","已收款·待取货"],["done","已完成"],["cancel","已取消"],["all","全部"]];
+function isDone(o){return !!o.collected}
+function pass(o){var s=o.status;switch(F){case"open":return(s==="PENDING"||s==="CLAIMED"||(s==="PAID"&&!isDone(o)));case"claimed":return s==="CLAIMED";case"pending":return s==="PENDING";case"paid":return s==="PAID"&&!isDone(o);case"done":return s==="PAID"&&isDone(o);case"cancel":return s==="CANCELLED";default:return true}}
+function render(){ if(TAB==="orders")renderOrders(); else if(TAB==="prep")renderPrep(); else if(TAB==="vouch")renderVouch() }
+function renderOrders(){
+  var q=$("q").value.trim().toLowerCase(),box=$("chips");box.textContent="";
+  FILTERS.forEach(function(f){var n=DATA.filter(function(o){var o2=F;F=f[0];var r=pass(o);F=o2;return r}).length;var b=document.createElement("button");b.className="chip"+(F===f[0]?" on":"");b.textContent=f[1]+" "+n;b.onclick=function(){F=f[0];renderOrders()};box.appendChild(b)});
+  var list=DATA.filter(pass).filter(function(o){return!q||(o.name+o.phone+o.id).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return(a.date+a.created)<(b.date+b.created)?-1:1});
+  var L=$("list");L.textContent="";if(!list.length){L.innerHTML='<div class="msg">没有订单</div>';return}
+  list.forEach(function(o){
+    var c=document.createElement("div");c.className="card";
+    var wa="https://wa.me/"+String(o.phone).replace(/\D/g,"").replace(/^0/,"60");
+    c.innerHTML='<div class="top"><div><span class="st '+o.status+'">'+({PENDING:"未付款",CLAIMED:"客人说已付款",PAID:"已收款",CANCELLED:"已取消"}[o.status]||esc(o.status))+'</span>'+(o.collected?'<span class="st COL">已取货</span>':'')+'<span class="nm">'+esc(o.name)+'</span></div><div class="tot">RM'+(+o.total).toFixed(2)+'</div></div>'+
+    '<div class="meta">'+esc(o.date)+' · '+esc({pickup:"自取",postage:"邮寄",rider:"Lalamove/Grab"}[o.method]||o.method)+' · '+esc(o.place)+(o.time?' · '+esc(o.time):'')+'</div>'+
+    '<div class="meta"><a href="'+wa+'" target="_blank" rel="noopener">'+esc(o.phone)+' (WhatsApp)</a> · '+esc(o.id)+'</div>'+
+    '<div class="items">'+esc(o.items)+'</div>'+(o.note?'<div class="note">备注：'+esc(o.note)+'</div>':'')+
+    '<div class="amt">对账金额 <b>RM'+(+(o.payAmount||o.total)).toFixed(2)+'</b>'+(o.voucher?' · 用了 voucher '+esc(o.voucher):'')+(o.wheel?' · 转盘：'+esc(o.wheel):'')+'</div>';
+    var r=document.createElement("div");r.className="row";r.style.marginTop="10px";
+    function B(t,cls,fn){var b=document.createElement("button");b.className="btn s "+cls;b.textContent=t;b.onclick=function(){b.disabled=true;fn()};r.appendChild(b)}
+    if(o.status==="PENDING"||o.status==="CLAIMED")B("✅ 确认已收款","ok",function(){mark(o.id,"PAID")});
+    if(o.status==="PAID"&&!o.collected)B("📦 已取货/已送出","",function(){mark(o.id,"COLLECTED")});
+    if(o.collected)B("撤销已取货","g",function(){mark(o.id,"UNCOLLECTED")});
+    if(o.status!=="CANCELLED")B("取消订单","bad",function(){if(confirm("确定取消 "+o.name+" 的订单？"))mark(o.id,"CANCELLED")});
+    else B("恢复为未付款","g",function(){mark(o.id,"PENDING")});
+    c.appendChild(r);L.appendChild(c)})
+}
+$("q").oninput=renderOrders;
+function mark(id,st){call({op:"mark",id:id,status:st}).then(function(j){if(!j||!j.ok){alert("失败："+(j&&j.err));}load()}).catch(function(){alert("连不上后台");load()})}
+function renderPrep(){
+  var by={};DATA.forEach(function(o){if(o.status!=="PAID"&&o.status!=="CLAIMED")return;if(o.collected||o.date<TODAY)return;(by[o.date]=by[o.date]||[]).push(o)});
+  var B=$("t-prep");B.textContent="";var ds=Object.keys(by).sort();if(!ds.length){B.innerHTML='<div class="msg">今天起还没有要备货的订单</div>';return}
+  ds.forEach(function(d){var tot={},cl=0;by[d].forEach(function(o){if(o.status==="CLAIMED")cl++;String(o.items).split("\n").forEach(function(ln){var m=ln.match(/^(?:Box|Bundle) of \d+ \((.*)\) RM/);if(m)m[1].split(", ").forEach(function(p){var q=p.match(/^(.*) x(\d+)$/);if(q)tot[q[1]]=(tot[q[1]]||0)+(+q[2])});else{var q2=ln.match(/^(.*) x(\d+) @/);if(q2)tot[q2[1]]=(tot[q2[1]]||0)+(+q2[2])}})});
+    var h='<div class="card"><div class="top"><div class="nm">'+esc(d)+'</div><div class="meta">'+by[d].length+' 单'+(cl?'（其中 '+cl+' 单还没确认收款）':'')+'</div></div><table><tr><th>要烤的</th><th>数量</th></tr>';
+    Object.keys(tot).sort().forEach(function(k){h+='<tr><td>'+esc(k)+'</td><td><b>'+tot[k]+'</b></td></tr>'});h+='</table>';
+    var pl={};by[d].forEach(function(o){(pl[o.place]=pl[o.place]||[]).push(o)});
+    Object.keys(pl).sort().forEach(function(p){h+='<h2>'+esc(p)+'</h2>';pl[p].forEach(function(o){h+='<div class="meta">'+esc(o.name)+' '+esc(o.phone)+(o.time?' · '+esc(o.time):'')+' — '+esc(String(o.items).replace(/\n/g,"; "))+'</div>'})});
+    B.innerHTML+=h+'</div>'})
+}
+function renderVouch(){call({op:"vouchers"}).then(function(j){var B=$("t-vouch");B.textContent="";if(!j||!j.ok){B.innerHTML='<div class="msg">读取失败</div>';return}
+  var inp=document.createElement("input");inp.type="search";inp.placeholder="搜索 名字 / 电话 / 代码（顾客找不回 voucher 时用）";B.appendChild(inp);var box=document.createElement("div");B.appendChild(box);
+  var ST={HOLD:"等收款确认",ACTIVE:"可用",USED:"已用",VOID:"作废",RESERVED:"使用中"};
+  function draw(){var q=inp.value.trim().toLowerCase();box.textContent="";var L=j.vouchers.slice().reverse().filter(function(v){return!q||(v.code+v.name+v.phone).toLowerCase().indexOf(q)>=0});
+    if(!L.length){box.innerHTML='<div class="msg">没有 voucher</div>';return}
+    var t='<div class="card"><table><tr><th>代码</th><th>奖品</th><th>顾客</th><th>状态</th><th>有效至</th></tr>';L.forEach(function(v){t+='<tr><td><b>'+esc(v.code)+'</b></td><td>'+esc(v.prize)+'</td><td>'+esc(v.name)+'<br><span class="meta">'+esc(v.phone)+'</span></td><td>'+esc(ST[v.status]||v.status)+'</td><td>'+esc(v.expires)+'</td></tr>'});box.innerHTML=t+'</table></div>'}
+  inp.oninput=draw;draw()})}
+$("bk").onclick=function(){$("bkmsg").textContent="备份中…";call({op:"backup"}).then(function(j){$("bkmsg").textContent=j&&j.ok?"已备份："+j.name:"备份失败"}).catch(function(){$("bkmsg").textContent="连不上后台"})};
+start();
+</script></body></html>
